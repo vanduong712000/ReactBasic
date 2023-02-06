@@ -1,4 +1,4 @@
-const Admin = () => {
+const Admin = (props) => {
     return(
         <div>Admin components</div>
     )
