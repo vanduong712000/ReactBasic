@@ -9,14 +9,40 @@ body {
   
 }
 
+@media (min-width: 1350px) {
+  .container, .container-lg, .container-md, .container-sm, .container-xl {
+    max-width: 1300px; }
+}
+
+
 .app-conteiner {
   .header-container {
-    .navbar-nav {
+
+    .btn-login{
+      border-radius: 5px;
+      margin-right: 15px;
+      padding: 0 15px;
+      border: -2px solid #629bf0;
+    }
+
+    button.btn-signup {
+      border-radius: 5px;
+      padding: 0 15px;
+      background: #141619;
+      color: white;
+
+      &:hover {
+        background: black;
+      }
+    }
+    .navbar {
+      padding-top: 20px;
       z-index: 10;
       opacity: 0.6;
+      
       .nav-link {
         &.active {
-          color: #dc3545;
+          color: #35b5dc;
         }
       }
     }
