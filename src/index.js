@@ -13,18 +13,23 @@ import {
 import User from './components/User/User';
 import Admin from './components/Admin/Admin';
 import HomePage from './components/Home/HomePage';
+import Dashboard from './components/Content/Dashboard';
+import ManageUser from './components/Content/ManageUser';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
     {/*<React.StrictMode>  */}
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />}>
-        <Route index element={<HomePage />}/>
-          <Route path="Users" element={<User />}/>
-          
+        <Route path="/" element={<App />} >
+          <Route index element={<HomePage />}/>
+          <Route path="users" element={<User />}/>
         </Route>
-          <Route path="Admins" element={<Admin />}/>
+          <Route path="/admins" element={<Admin />} >
+              <Route index element={<Dashboard />}/>
+              <Route path="manage-users" element={<ManageUser />}/>
+          </Route>    
       </Routes>
     </BrowserRouter>
     {/*</React.StrictMode>*/}
