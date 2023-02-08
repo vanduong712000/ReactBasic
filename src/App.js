@@ -5,9 +5,10 @@ import { Outlet } from "react-router-dom";
   const App = () => {
 
       return (
+      
         <div className="app-container">
           <div className='header-container'>
-           <Header />
+               <Header />
           </div>
           <div className='main-container'>
             <div className='sidenav-container'>
@@ -17,6 +18,7 @@ import { Outlet } from "react-router-dom";
           <div className='app-content'>
              <Outlet/>
           </div>
+           
         </div>
       );
     }
