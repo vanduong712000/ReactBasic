@@ -40,7 +40,7 @@ const SideBar = (props) => {
                         }}
                     >
                         <DiReact size={'3em'} color={"oobfff"}/>
-                        <span>Hoi Dan IT</span>
+                        <span>Project CV</span>
                     </div>
                 </SidebarHeader>
 
