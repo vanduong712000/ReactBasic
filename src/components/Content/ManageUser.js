@@ -3,12 +3,17 @@ import './ManageUser.scss'
 import { FcPlus } from 'react-icons/fc';
 import TableUser from "./TableUser";
 import { useEffect, useState } from 'react';
-import {getAllUsers} from '../../services/apiServices'
+import {getAllUsers , getUserWithPaginate} from '../../services/apiServices'
 import ModalUpdateUser from "./ModalUpdateUser";
 import ModalDeleteUser from "./ModalDeleteUser";
+import TableUserPaginate from "./TableUserPaginate";
 
 
 const ManageUser = (props)=> {
+   const LIMIT_USER = 3;
+   const [pageCount, setPageCount] = useState(0);
+   const [currentPage, setCurrentPage] = useState(1);
+
     const [showModalCreateUser,setShowModalCreateUser] = useState(false);
     const [showModalUpdateUser, setShowModalUpdateUser] = useState(false);
     const [dataUpdate, setDataUpdate] =  useState({});
@@ -19,7 +24,8 @@ const ManageUser = (props)=> {
     const [listUsers, setListUsers] = useState([])
      //componentDidMount
     useEffect(()=>{
-        fetchListUsers();
+      //   fetchListUsers();
+      fetchListUsersWithPaginate(1);
      }, []);
 
      const fetchListUsers = async () => {
@@ -28,6 +34,15 @@ const ManageUser = (props)=> {
              setListUsers(res.DT)
         }
      }
+
+     const fetchListUsersWithPaginate = async (page) => {
+      let res = await getUserWithPaginate(page, LIMIT_USER);
+      if(res.EC === 0){
+         console.log("res.dt = ", res.DT);
+           setListUsers(res.DT.users);
+           setPageCount(res.DT.totalPages); // lấy người dùng theo phân trang
+      }
+   }
 
      const handleClickBtnUpdate = (user) => {
         setShowModalUpdateUser(true);
@@ -56,17 +71,28 @@ const ManageUser = (props)=> {
                         <FcPlus /> Add new users</button>
                   </div>
                   <div className="table-users-container">
-                         <TableUser 
+                         {/* <TableUser 
                              listUsers={listUsers} 
                              handleClickBtnUpdate={handleClickBtnUpdate}
                              handleClickBtnDelete={handleClickBtnDelete}
+                         /> */}
+                         <TableUserPaginate 
+                              listUsers={listUsers} 
+                              handleClickBtnUpdate={handleClickBtnUpdate}
+                              handleClickBtnDelete={handleClickBtnDelete}
+                              fetchListUsersWithPaginate={fetchListUsersWithPaginate}
+                              pageCount={pageCount}
+                              currentPage={currentPage}
+                              setCurrentPage={setCurrentPage}
                          />
-                         
                   </div>
                   <ModalCreateUser 
                      show={showModalCreateUser}
                      setShow={setShowModalCreateUser}
                      fetchListUsers={fetchListUsers}
+                     fetchListUsersWithPaginate={fetchListUsersWithPaginate}
+                     currentPage={currentPage}
+                     setCurrentPage={setCurrentPage}
                   />
                   <ModalUpdateUser 
                    show={showModalUpdateUser}
@@ -74,12 +100,18 @@ const ManageUser = (props)=> {
                    dataUpdate={dataUpdate}
                    fetchListUsers={fetchListUsers}
                    resetUpdateData={resetUpdateData}
+                   fetchListUsersWithPaginate={fetchListUsersWithPaginate}
+                   currentPage={currentPage}
+                   setCurrentPage={setCurrentPage}
                   />
                   <ModalDeleteUser
                   show={showModalDeleteUser}
                   setShow={setShowModalDeleteUser}
                   dataDelete={dataDelete}
                   fetchListUsers={fetchListUsers} //delete show new list
+                  fetchListUsersWithPaginate={fetchListUsersWithPaginate}
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
                   />
            </div>
         </div>
