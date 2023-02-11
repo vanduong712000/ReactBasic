@@ -38,7 +38,7 @@ const ManageUser = (props)=> {
      const fetchListUsersWithPaginate = async (page) => {
       let res = await getUserWithPaginate(page, LIMIT_USER);
       if(res.EC === 0){
-         console.log("res.dt = ", res.DT);
+         // console.log("res.dt = ", res.DT);
            setListUsers(res.DT.users);
            setPageCount(res.DT.totalPages); // lấy người dùng theo phân trang
       }
@@ -47,7 +47,7 @@ const ManageUser = (props)=> {
      const handleClickBtnUpdate = (user) => {
         setShowModalUpdateUser(true);
         setDataUpdate(user);
-        console.log('updateuser: ' , user);
+      //   console.log('updateuser: ' , user);
      }
      
     

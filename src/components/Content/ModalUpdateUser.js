@@ -32,7 +32,7 @@ const ModalUpdateUser = (props)=> {
   const [previewImage, setPreviewImage] = useState("");
 
   useEffect(()=> { 
-      console.log( '>>>useffect: ', dataUpdate)
+      // console.log( '>>>useffect: ', dataUpdate)
       if(!_.isEmpty(dataUpdate)){
            //update state
            setEmail(dataUpdate.email);
@@ -53,7 +53,7 @@ const ModalUpdateUser = (props)=> {
        }else {
            //setPreviewImage("")
        } 
-        console.log('upload file', event.target.files[0])
+        // console.log('upload file', event.target.files[0])
   }
   const validateEmail = (email) => {
     return String(email)
@@ -79,7 +79,7 @@ const ModalUpdateUser = (props)=> {
        
 
         let data = await postUpdateUser( dataUpdate.id , username, role, image);
-        console.log("component res: " , data)
+        // console.log("component res: " , data)
         if(data && data.EC === 0){
           toast.success(data.EM);
           handleClose();
@@ -93,7 +93,7 @@ const ModalUpdateUser = (props)=> {
           }
     }
 
-      console.log('check dataupdate: ', props.dataUpdate)
+      // console.log('check dataupdate: ', props.dataUpdate)
 
   return (
     <>

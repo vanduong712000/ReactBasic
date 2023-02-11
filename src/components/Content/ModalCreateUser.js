@@ -35,7 +35,7 @@ const ModalCreateUser = (props)=> {
        }else {
            //setPreviewImage("")
        } 
-        console.log('upload file', event.target.files[0])
+        // console.log('upload file', event.target.files[0])
   }
   const validateEmail = (email) => {
     return String(email)
@@ -64,7 +64,7 @@ const ModalCreateUser = (props)=> {
        
 
         let data = await postCreateNewUser( email, password, username, role, image);
-        console.log("component res: " , data)
+        // console.log("component res: " , data)
         if(data && data.EC === 0){
           toast.success(data.EM);
           handleClose();
