@@ -7,7 +7,7 @@ import Question from "./Question";
 const DetailQuiz =(props) => {
     const params = useParams(); //Khai báo tham số theo link id
     const location = useLocation(); //muốn biết người dùng ở đâu ra
-    console.log(location)
+    // console.log(location)
 
     const quizId = params.id;
     
@@ -20,7 +20,7 @@ const DetailQuiz =(props) => {
 
      const fetchQuestions = async () => {
         let  res = await getDataQuiz(quizId);
-        console.log('>>>>> check question: ', res)
+        // console.log('>>>>> check question: ', res)
         if(res && res.EC === 0){
             let raw = res.DT;
            let data = _.chain(raw)
@@ -38,19 +38,19 @@ const DetailQuiz =(props) => {
             item.answers.isSelected = false; //bien data base
           answers.push(item.answers);
         })
-        console.log('value: ', value, 'key: ', key)
+        // console.log('value: ', value, 'key: ', key)
         
         
           return { questionId: key, answers , questionDescription , image }
         }
         )
     .value();
-    console.log(data)
+    // console.log(data)
     setDataQuiz(data)
         }
      }
 
-    console.log(">>>> check dataQuiz: ", dataQuiz )
+    // console.log(">>>> check dataQuiz: ", dataQuiz )
     
     const handlePrev = () => {
         if(index -1 < 0) return
@@ -67,21 +67,64 @@ const DetailQuiz =(props) => {
         let question = dataQuizClone.find(item => +item.questionId === +questionId)
         if(question && question.answers){
 
-           let b = question.answer.map(item => {
+            question.answers = question.answer.map(item => {
                 if(item.id === answerId){
                     item.isSelected = !item.isSelected;
                 }
                 return item;
-            })
-
-            question.nswers = b;
+            })  
     }
+    
           let index = dataQuizClone.findIndex(item => +item.questionId === +questionId)
          if(index > 1){
             dataQuizClone[index] = question;
          }
         }
     
+        const handleFinishQuiz = () => {
+            // {
+            //     "quizId": 1,
+            //     "answers": [
+            //         { 
+            //             "questionId": 1,
+            //             "userAnswerId": [3]
+            //         },
+            //         { 
+            //             "questionId": 2,
+            //             "userAnswerId": [6]
+            //         }
+            //     ]
+            // }
+            
+            console.log(">>>check data before submit: ", dataQuiz)
+            let payload = {
+                quizId : +quizId,
+                answers: []
+            
+            };
+            let answers = [];
+            if(dataQuiz && dataQuiz.length > 0){
+                   dataQuiz.forEach(question => {
+
+                     let questionId = question.questionId;
+                     let userAnswerId = [];
+                        
+                      //todo: userAnswerId
+                     question.answers.forEach( a => {
+                      if(a.isSelected === true){
+                        userAnswerId.push(a.id)
+                      }
+                     })
+                     answers.push({
+                        questionId : +questionId,
+                        userAnswerId: userAnswerId
+                     })
+                   })
+                   payload.answer = answers;
+                   console.log("final payload: ", payload)
+            }
+        }
+        
     return (
         <div className="detail-quiz-container">
             <div className="left-content">
@@ -109,7 +152,7 @@ const DetailQuiz =(props) => {
                          > Next</button>
 
                          <button className="btn btn-warning"
-                          onClick={()=> handleNext()}
+                          onClick={ ()=> handleFinishQuiz() }
                          > Finish</button>
                  </div>
             </div>
