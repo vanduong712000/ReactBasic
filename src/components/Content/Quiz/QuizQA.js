@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 import Select from 'react-select'
-import './Questions.scss'
+import './QuizQA.scss'
 import { BsFillPatchPlusFill , BsPatchMinusFill  } from "react-icons/bs"
 import { AiOutlineMinusCircle , AiFillPlusSquare} from "react-icons/ai"
 import { RiImageAddFill } from "react-icons/ri";
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
 import Lightbox from 'react-lightbox-component';
-import { getAllQuizForAdmin , postCreateNewAnswerForQuestion , postCreateNewQuestionForQuiz  } from '../../../services/apiServices';
+import { getAllQuizForAdmin , postCreateNewAnswerForQuestion , 
+  postCreateNewQuestionForQuiz, getQuizWithQA  } from '../../../services/apiServices';
 import { toast } from 'react-toastify';
 
-const Questions = (props) => {
+const QuizQA = (props) => {
     const options = [
         { value: 'chocolate', label: 'Chocolate' },
         { value: 'strawberry', label: 'Strawberry' },
@@ -48,13 +49,48 @@ const Questions = (props) => {
         fetchQuiz();
     },[])
 
+    useEffect(()=> {
+      if(selectedQuiz && selectedQuiz.value){
+        fetchQuizWithQA();
+      }
+  }, [selectedQuiz])
+
+  function urltoFile(url, filename, mimeType){
+    return (fetch(url)
+         .then(function(res){return res.arrayBuffer();})
+         .then(function(buf){return new File([buf], filename,{type:mimeType});})
+    );
+  }
+  
+  
+  
+
+    const fetchQuizWithQA = async () => {
+      let rs = await getQuizWithQA(selectedQuiz.value);
+      if(rs && rs.EC === 0) {
+        //convert base64  to File object
+        let newQA = [];
+        for(let i = 0 ; i < rs.DT.qa.length; i++){
+          let q = rs.DT.qa[i];
+           if(rs.DT.qa[i].imageFile){
+            q.imageName = `Question-${q.id}.png`;
+            q.imageFile = 
+           await urltoFile(`data:image/png;base64,${q.imageFile}`, `Question-${q.id}`,'image/png');
+           }
+           newQA.push(q);
+        }
+      setQuestions(newQA);
+      console.log('rs: ', rs)
+    }
+    }
+
     const fetchQuiz = async() => {
         let res = await getAllQuizForAdmin();
         if( res && res.EC === 0){
           let newQuiz = res.DT.map(item => {
             return {
                value: item.id,
-               label: `${item.id}item.description`
+               label: `${item.id} - ${item.description}`
             }
           })
             setListQuiz(newQuiz)
@@ -232,19 +268,14 @@ const handlePreviewImage = (questionId) => {
 }
     return (
 <div className="questions-container">
-    <div className="title">
-               Manage Questions
-    </div>
-    <hr />
+    
         <div className="add-new-question">
-           
             <div className='col-6 form-group'>
               <label className='mb-2'>Select Quiz: </label>
              <Select
                defaultValue={selectedQuiz}
                onChange={setSelectedQuiz}
-               options={options}
-               className="form-control"
+               options={listQuiz}
                />
             </div>
             <div className='mt-3 mb-2'>
@@ -357,7 +388,7 @@ const handlePreviewImage = (questionId) => {
     )   
 }
 
-export default Questions;
+export default QuizQA;
 
 
 
