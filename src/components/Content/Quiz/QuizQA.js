@@ -7,8 +7,7 @@ import { RiImageAddFill } from "react-icons/ri";
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
 import Lightbox from 'react-lightbox-component';
-import { getAllQuizForAdmin , postCreateNewAnswerForQuestion , 
-  postCreateNewQuestionForQuiz, getQuizWithQA  } from '../../../services/apiServices';
+import { getAllQuizForAdmin , getQuizWithQA , postUpsertQA } from '../../../services/apiServices';
 import { toast } from 'react-toastify';
 
 const QuizQA = (props) => {
@@ -237,23 +236,34 @@ const handleSubmitQuestionForQuiz = async() => {
     }
     
  
+  let questionsClone = _.cloneDeep(questions);
+  for( let i =0; i< questionsClone.length; i++){
+    if(questionsClone[i].imageFile){
+      questionsClone[i].imageFile = await toBase64(questionsClone[i].imageFile)
+    }
+  }
+
+  let res = await postUpsertQA({
+     quizId: selectedQuiz.value,
+     questions: questionsClone
+  });
+  if(res && res.EC === 0){
+      toast.success('Create question  and answers succed!')
+      fetchQuizWithQA();
+
+  }
+  //  setQuestions(initQuestions);
   
-  for( const question of questions) {
-    const q = await postCreateNewQuestionForQuiz(
-      +selectedQuiz.value,
-      question.description,
-      question.imageFile);
-    //submit answer
-    
-   for (const answer of question.answers) {
-    await postCreateNewAnswerForQuestion(
-       answer.description, answer.isCorrect, q.DT.id
-     )
-    } 
-   }
-   toast.success('Create question  and answers succed!')
-   setQuestions(initQuestions);
 }
+
+const toBase64 = file => new Promise((resolve, reject) => {
+   const reader = new FileReader();
+   reader.readAsDataURL(file);
+   reader.onload = () => resolve(reader.result);
+   reader.onerror = error => reject(error);
+});
+
+
 
 const handlePreviewImage = (questionId) => {
   let questionsClone = _.cloneDeep(questions);

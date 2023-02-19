@@ -5,6 +5,7 @@ import _ from 'lodash';
 import './DetaiQuiz.scss'
 import Question from "./Question";
 import ModalResult from "./ModalResult";
+import RightContent from "./RightContent/RightContent";
 
 const DetailQuiz =(props) => {
     const params = useParams(); //Khai báo tham số theo link id
@@ -154,9 +155,9 @@ const DetailQuiz =(props) => {
                  </div>
                  <div className="q-content">
                          <Question 
-                         index={index}
-                         handleCheckbox={handleCheckbox}
-                         data={dataQuiz && dataQuiz.length > 0 
+                             index={index}
+                             handleCheckbox={handleCheckbox}
+                             data={dataQuiz && dataQuiz.length > 0 
                          ? dataQuiz[index] 
                          : []}/>
                  </div>
@@ -174,7 +175,11 @@ const DetailQuiz =(props) => {
                  </div>
             </div>
             <div className="right-content">
-                count down
+                <RightContent 
+                 index={index}
+                 dataQuiz={dataQuiz}
+                 handleFinishQuiz={handleFinishQuiz}
+                />
             </div>
             <ModalResult 
             show={isShowModalResult}
