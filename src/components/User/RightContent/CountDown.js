@@ -3,12 +3,7 @@ import { useEffect, useState } from "react";
 const CountDown = (props) => {
 
     const [count, setCount] = useState(5);
-    
-    
-    
-    
-    
-
+  
     useEffect(() => {
         if(count === 0) {
             props.onTimeUp();
@@ -33,7 +28,7 @@ const CountDown = (props) => {
     
         return [hours, minutes, seconds]
         .map(v => v < 10 ? "0" + v : v)
-        .filter((v, i) => v !== !! i > 0)
+        .filter((v, i) => v !== "0" || i > 0)
         .join(":")
     }
     
